@@ -4,7 +4,7 @@
 // @author      RealGame (Tomer Zait)
 // @description Get FaveZ0ne Download Links On Tvnetil Review Page
 // @include     /^http(s)?://(www\.)?tvnetil\.net/review/\d+/\d+/$/
-// @version     1.0
+// @version     1.1
 // @grant       GM_xmlhttpRequest
 // ==/UserScript==
 (function() {
@@ -19,7 +19,7 @@
         this.parentElement.removeChild(this);
     };
 
-    // from encodeURIComponent With Windows-1255 Special Characters Encoding
+    // EncodeURIComponent With Windows-1255 Special Characters Encoding
     function encodeWin1255URIComponent(str) {
         var win1255EncodedString = encodeURIComponent(str).replaceAll('%C2%A0', '%20');
         for(var i=0x90; i<=0xAA; i++) {
@@ -28,7 +28,7 @@
                     "%" + (i + 0x50).toString(16).toUpperCase()
             );
         }
-        return win1255EncodedString;
+        return win1255EncodedString.replace(/(%20){2,}/g, '%20');
     }
 
     // Get TvShow Title To Search In FaveZ0ne
@@ -87,13 +87,29 @@
     });
 
     // Set FaveZ0ne Links Instead Of FaveZ0ne Advertise And Remove adf.ly ads
-    var blokl1 = document.getElementsByClassName('blokl1')[0];
-    var pageText = blokl1.getElementsByTagName('div')[0];
-    pageText.id = "pagetext";
-    var faveZ0neDoc = new DOMParser().parseFromString(response.responseText, "text/html");
-    var faveZ0nePageText = faveZ0neDoc.getElementById("pagetext");
-    // Remove Results Found Annoying Text
-    faveZ0nePageText.getElementsByTagName('div')[0].remove();
-    // Finally Changing The FaveZ0ne Advertise And Removing adf.ly ads
-    pageText.innerHTML = faveZ0nePageText.innerHTML.replaceAll("http://adf.ly/2081874/", "");
+    var pageText = (function () {
+        var blokl1 = document.evaluate(
+            "//div[@class='blokl1']/div[contains(., 'FaveZ0ne')]",
+            document,
+            null,
+            XPathResult.FIRST_ORDERED_NODE_TYPE,
+            null
+        ).singleNodeValue;
+        blokl1.id = "pagetext";
+        blokl1.style = "";
+
+        return blokl1;
+    })();
+
+    pageText.innerHTML = (function () {
+        var faveZ0neDoc = new DOMParser().parseFromString(response.responseText, "text/html");
+        var faveZ0nePageText = faveZ0neDoc.getElementById("pagetext");
+        // Remove Results Found Annoying Text
+        faveZ0nePageText.getElementsByTagName('div')[0].remove();
+
+        return faveZ0nePageText.innerHTML.replaceAll(
+            /http(s)?:\/\/adf\.ly\/\d+\//g,
+            ""
+        );
+    })();
 })();
