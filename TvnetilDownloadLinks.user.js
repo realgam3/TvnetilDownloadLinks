@@ -49,7 +49,18 @@
       document.head.appendChild(style);
       return style.sheet;
     })();
-    sheet.insertRule('#pagetext {direction: rtl; background: url("http://www.favez0ne.net/images/dots_bg2.gif") repeat scroll 100% center rgba(0, 0, 0, 0); height: auto; min-height: 580px; padding: 10px 0px; text-align: right; width: 670px; margin-right: 10px;}', sheet.cssRules.length);
+    sheet.insertRule(
+        '#pagetext {' +
+            'direction: rtl; ' +
+            'background: url("http://www.favez0ne.net/images/dots_bg2.gif") repeat scroll 100% center rgba(0, 0, 0, 0); ' +
+            'height: auto; ' +
+            'min-height: 580px; ' +
+            'padding: 10px 0px; ' +
+            'text-align: right; ' +
+            'width: 670px; ' +
+            'margin-right: 10px;}',
+        sheet.cssRules.length
+    );
 
     // inject setDis Function (From FaveZ0ne)
     var setDis = document.createElement('script');
