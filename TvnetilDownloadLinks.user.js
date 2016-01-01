@@ -4,7 +4,7 @@
 // @author      RealGame (Tomer Zait)
 // @description Get FaveZ0ne Download Links On Tvnetil Review Page
 // @include     /^http(s)?://(www\.)?tvnetil\.net/review/\d+/\d+/$/
-// @version     1.2
+// @version     1.3
 // @grant       GM_xmlhttpRequest
 // ==/UserScript==
 // Add replaceAll To The String Prototype
