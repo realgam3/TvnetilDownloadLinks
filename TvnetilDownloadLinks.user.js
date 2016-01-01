@@ -64,7 +64,7 @@ Element.prototype.remove = function() {
             // Set FaveZ0ne Links Instead Of FaveZ0ne Advertise And Remove adf.ly ads
             var pageText = (function () {
                 var blokl1 = document.evaluate(
-                    "//div[@class='blokl1']/div[contains(., 'FaveZ0ne')]",
+                    "//div[@class='blokl1']//div[contains(., 'FaveZ0ne')]",
                     document,
                     null,
                     XPathResult.FIRST_ORDERED_NODE_TYPE,
