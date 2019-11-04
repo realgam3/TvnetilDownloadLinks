@@ -4,7 +4,7 @@
 // @author      RealGame (Tomer Zait)
 // @description Get FaveZ0ne Download Links On Tvnetil Review Page
 // @include     /^http(s)?://(www\.)?tvnetil\.net/review/\d+/\d+/$/
-// @version     1.3
+// @version     1.4
 // @grant       GM_xmlhttpRequest
 // ==/UserScript==
 // Add replaceAll To The String Prototype
@@ -32,20 +32,14 @@ Element.prototype.remove = function() {
 
     // Get TvShow Title Encoded To Search In FaveZ0ne (Windows-1255 Encoded)
     function getWin1255EncodedTvshowTitle() {
-        var tvshow_title = document.evaluate(
-            "//div[@class='blokl1']/h1[1]",
-            document,
-            null,
-            XPathResult.STRING_TYPE,
-            null
-        ).stringValue.trim();
+        var tvshow_title = document.querySelector('.blokl1 > h1').innerText.trim();
         return encodeWin1255URIComponent(tvshow_title);
     }
 
     // Get FaveZ0ne Links Page
     GM_xmlhttpRequest({
         method: "POST",
-        url: "http://www.favez0ne.net/search.php",
+        url: "https://www.favez0ne.net/search.php",
         overrideMimeType: "text/html; charset=windows-1255",
         data: "srch=" + getWin1255EncodedTvshowTitle(),
         onload: (function(response) {
@@ -76,7 +70,7 @@ Element.prototype.remove = function() {
                 var style = blokl1.style;
                 style.padding = "10px";
                 style.direction = 'rtl';
-                style.background ='url("http://www.favez0ne.net/images/dots_bg2.gif") repeat 100%';
+                style.background ='url("https://www.favez0ne.net/images/dots_bg2.gif") repeat 100%';
                 style.height = "auto";
                 style.minHeight = "580px";
                 style.textAlign = "right";
@@ -88,11 +82,12 @@ Element.prototype.remove = function() {
             pageText.innerHTML = (function () {
                 var faveZ0neDoc = new DOMParser().parseFromString(response.responseText, "text/html");
                 var faveZ0nePageText = faveZ0neDoc.getElementById("pagetext");
+                console.log(faveZ0nePageText);
                 // Remove Results Found Annoying Text
                 faveZ0nePageText.getElementsByTagName('div')[0].remove();
 
                 return faveZ0nePageText.innerHTML.replaceAll(
-                    /http(s)?:\/\/adf\.ly\/\d+\//g,
+                    /http(?:s)?:\/\/adf\.ly\/\d+\//g,
                     ""
                 );
             })();
